@@ -1,4 +1,5 @@
 class CategoriesController < ApplicationController
+  before_action :set_categories, only: %i[ show edit update posts ]
   def index
     @categories = Category.all
   end
@@ -12,8 +13,8 @@ class CategoriesController < ApplicationController
   end
 
   def create
-    category = Category.create(category_params)
-    redirect_to category_path(category)
+    @category = Category.create(params[:category])
+    redirect_to category_path(@category)
   end
 
   def edit
@@ -21,14 +22,13 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    category = Category.find(params[:id])
-    category.update(category_params)
-    redirect_to category_path(category)
+    @category.update(params.require(:category))
+    redirect_to category_path(@category)
   end
 
   private
 
-  def category_params
-    params.require(:category).permit(:name)
+  def set_categories
+    @category = Category.find(params[:id])
   end
 end
